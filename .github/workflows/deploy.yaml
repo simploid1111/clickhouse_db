@@ -15,8 +15,8 @@ jobs:
 
       - name: Run Docker Compose Up
         env:
-          CLICKHOUSE_DB: {{ secrets.CLICKHOUSE_DB }}
-          CLICKHOUSE_USER: {{ secrets.CLICKHOUSE_USER }}
-          CLICKHOUSE_PASSWORD: {{ secrets.CLICKHOUSE_PASSWORD }}
+          CLICKHOUSE_DB: ${{ secrets.CLICKHOUSE_DB }}
+          CLICKHOUSE_USER: ${{ secrets.CLICKHOUSE_USER }}
+          CLICKHOUSE_PASSWORD: ${{ secrets.CLICKHOUSE_PASSWORD }}
         run:
           docker-compose up -d --remove-orphans
