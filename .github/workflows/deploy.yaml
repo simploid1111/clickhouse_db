@@ -3,7 +3,7 @@ name: Deploy clickhouse to VDS
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   deploy:
     runs-on: self-hosted
