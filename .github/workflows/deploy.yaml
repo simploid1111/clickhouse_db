@@ -1,0 +1,22 @@
+name: Deploy clickhouse to VDS
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+
+    syeps:
+      - name: Checkout repository code
+        uses: actions/checkout@v6
+
+      - name: Run Docker Compose Up
+        env:
+          CLICKHOUSE_DB: {{ secrets.CLICKHOUSE_DB }}
+          CLICKHOUSE_USER: {{ secrets.CLICKHOUSE_USER }}
+          CLICKHOUSE_PASSWORD: {{ secrets.CLICKHOUSE_PASSWORD }}
+        run:
+          docker-compose up -d --remove-orphans
