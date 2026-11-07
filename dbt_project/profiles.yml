@@ -1,0 +1,17 @@
+bi_dwh_project:
+  outputs:
+    dev:
+      type: clickhouse
+      schema: default # Ваша целевая база данных в ClickHouse
+      
+      # Подставляем переменные окружения, чтобы не хранить пароли в коде
+      host: "{{ env_var('CLICKHOUSE_HOST') }}"
+      port: 8123 # Стандартный безопасный порт ClickHouse Cloud / Yandex Cloud
+      user: "{{ env_var('CLICKHOUSE_USER') }}"
+      password: "{{ env_var('CLICKHOUSE_PASSWORD') }}"
+      
+      secure: False # Обязательно для облака (SSL/TLS)
+      verify: False
+      connect_timeout: 10
+      
+  target: dev

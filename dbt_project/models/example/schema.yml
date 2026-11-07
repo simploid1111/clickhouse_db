@@ -1,0 +1,12 @@
+
+version: 2
+
+models:
+  - name: employee_orders
+    description: "orders by employees"
+    columns:
+      - name: employeeid
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null

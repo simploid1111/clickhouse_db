@@ -1,0 +1,30 @@
+version: 2
+
+sources:
+  - name: prod
+    database: prod
+    schema: prod
+    
+    tables:
+      - name: categories
+        description: "Категории продуктов"
+      - name: customers
+        description: "Клиенты компании"
+      - name: shippers
+        description: "Компании по доставке"
+      - name: suppliers
+        description: "Поставщики продуктов"
+      - name: regions
+        description: "Регионы"
+      - name: territories
+        description: "Территории"
+      - name: employee_territories
+        description: "Связующая таблица сотрудников и территорий"
+      - name: employees
+        description: "Сотрудники компании"
+      - name: products
+        description: "Продукты"
+      - name: order_details
+        description: "Детализация заказов (позиции чека)"
+      - name: orders
+        description: "Таблица с транзакциями и заказами"
