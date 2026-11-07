@@ -1,5 +1,12 @@
 
--- Use the `ref` function to select from other models
+{{ config(
+    materialized = 'table',
+    engine = 'MergeTree()',
+    order_by = 'employeeid',
+    database = 'prod',
+    alias = 'employee_orders_in_countries',
+    on_schema_change = 'append_new_columns'
+) }}
 select 
 	employeeid
 	,lastname
