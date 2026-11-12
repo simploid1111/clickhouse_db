@@ -15,7 +15,7 @@ services:
     volumes:
       - ch_data:/var/lib/clickhouse
       - ch_logs:/var/log/clickhouse
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # <-- ДОБАВЬТЕ ЭТУ СТРОКУ
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  
 
     ulimits:
       nofile:
