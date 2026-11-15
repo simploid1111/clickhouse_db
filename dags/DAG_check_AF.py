@@ -24,8 +24,8 @@ def check_clickhouse_dag():
             database=conn.schema or 'default'
         )
         
-        result = client.query_dataframe('SELECT version()')
-        print(f"Connected successfully! ClickHouse version: {result[0][0]}")
+        result = client.query_dataframe('SELECT version()')['version__'].iloc[0]
+        print(f"Connected successfully! ClickHouse version: {result}")
         return result
 
     test_clickhouse_connection()
