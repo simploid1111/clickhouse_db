@@ -14,7 +14,7 @@ toStartOfMonth(max(splitByChar('.', if(shippeddate='NULL', '1970-01-01 00:00:00'
 	) 
 from {{ source('prod', 'orders') }}
 ) as arr_dt 
-,orders as 
+,orders_cte as 
 (
 select 
 	customerid
@@ -48,7 +48,7 @@ from
 		,shippedmonth 
 		,sum(revenue) as revenue
 		,uniqExact(orderid) order_count
-	from {{ source('prod', 'orders') }} 
+	from orders_cte
 	left join order_details 
 	using(orderid)
 	group by all
