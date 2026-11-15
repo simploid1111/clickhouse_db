@@ -1,6 +1,6 @@
 from datetime import datetime
 from airflow.decorators import dag, task
-from airflow.bases.hook import BaseHook  # Used in Airflow 3 to fetch connections
+from airflow.hooks.base import BaseHook  # Used in Airflow 3 to fetch connections
 import clickhouse_driver
 
 @dag(
