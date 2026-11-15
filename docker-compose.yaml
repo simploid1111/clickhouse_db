@@ -1,29 +1,99 @@
-version: '3.8'
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.10.2
+  environment:
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
+    AIRFLOW__CORE__LOGGING_LEVEL: INFO
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+  user: "${AIRFLOW_UID:-50000}:0"
+  depends_on:
+    postgres:
+      condition: service_healthy
 
 services:
+
+  # --- 1. ВАШ CLICKHOUSE ---
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: clickhouse_db
     restart: always
     ports:
-      - "8123:8123"  # HTTP интерфейс (для интеграций и веб-клиентов)
-      - "9000:9000"  # Нативный протокол (для clickhouse-client и кода)
+      - "8123:8123"
+      - "9000:9000"
     environment:
-      CLICKHOUSE_DB: ${CLICKHOUSE_DB}
-      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
-      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
+      CLICKHOUSE_DB: prod
+      CLICKHOUSE_USER: dbt_user
+      CLICKHOUSE_PASSWORD: dbt_password_v2
     volumes:
       - ch_data:/var/lib/clickhouse
       - ch_logs:/var/log/clickhouse
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  
-
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ulimits:
       nofile:
         soft: 262144
         hard: 262144
 
+  # --- 2. БАЗА ДАННЫХ ДЛЯ AIRFLOW (PostgreSQL) ---
+  postgres:
+    image: postgres:13
+    container_name: airflow_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- 3. ВЕБ-ИНТЕРФЕЙС AIRFLOW ---
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: airflow_webserver
+    command: webserver
+    restart: always
+    ports: ["8080:8080"] # Строгая запись массива для избежания ошибок парсинга
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # --- 4. ПЛАНИРОВЩИК AIRFLOW ---
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow_scheduler
+    command: scheduler
+    restart: always
+
+  # --- 5. КОНТЕЙНЕР ИНИЦИАЛИЗАЦИИ БАЗЫ ДАННЫХ ---
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow_init
+    command: version
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__CORE__FERNET_KEY: ''
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'False'
+      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin_password # Пароль для входа в веб-интерфейс
+
 volumes:
   ch_data:
     driver: local
   ch_logs:
+    driver: local
+  airflow_postgres_data:
     driver: local

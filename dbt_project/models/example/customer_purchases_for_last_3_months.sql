@@ -41,7 +41,7 @@ select
 	*
 	,avg(revenue) over(partition by customerid order by shippedmonth rows BETWEEN 2 preceding and current row) revenue_3_last_month
 	,sum(order_count) over(partition by customerid order by shippedmonth rows BETWEEN 2 preceding and current row) order_cnt_over_3_last_month
-from 
+from
 	(
 	select distinct
 		customerid
