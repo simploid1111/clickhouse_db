@@ -12,7 +12,12 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v6
-
+      
+      - name: Set permissions for Airflow directories
+        run: |
+          mkdir -p logs plugins dags
+          chown -R 50000:0 logs plugins dags dbt_project
+      
       - name: Run Docker Compose Up
         env:
           CLICKHOUSE_DB: ${{ secrets.CLICKHOUSE_DB }}
