@@ -8,7 +8,7 @@ import clickhouse_driver
     schedule='@daily',           # Replaced 'schedule_interval' in newer Airflow versions
     start_date=datetime(2026, 11, 11),
     catchup=False,
-    tags=['clickhouse', 'check']
+    tags=['clickhouse', 'check_version']
 )
 def check_clickhouse_dag():
     @task
