@@ -1,4 +1,4 @@
-clickhouse-driver==0.2.9
+clickhouse-driver>=0.2.9
 astronomer-cosmos
 dbt-adapters==1.24.5
 dbt-clickhouse==1.10.3
