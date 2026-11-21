@@ -1,3 +1,11 @@
+{{ config(
+    materialized = 'view',
+    engine = 'MergeTree()',
+    order_by = 'regiondescription',
+    database = 'prod',
+    alias = 'most_selling_region',
+    on_schema_change = 'append_new_columns'
+) }}
 with customer_data as
 (
 select 
