@@ -23,7 +23,7 @@ from prod.employee_territories et
 where employeeid in (select employeeid from {{ source('prod', 'orders') }})
 )
 select 
-	regiondescription
+	coalesce(regiondescription, '') regiondescription
 	,uniqExact(orderid) as order_count
 	,sum(unitprice*quantity*(1-discount)) as summary
 from prod.orders od 
