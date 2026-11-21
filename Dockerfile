@@ -4,7 +4,7 @@ USER airflow
 
 # 1. Ставим пакеты для Airflow и Cosmos в основное окружение
 COPY af_requirements.txt /af_requirements.txt
-RUN pip install --no-cache-dir -r /af_requirements.txt
+RUN pip install --no-cache-dir "apache-airflow==${AIRFLOW_VERSION}"  -r /af_requirements.txt
 
 # 2. Ставим dbt-clickhouse в изолированный venv, чтобы не сломать зависимости Airflow
 RUN python -m venv /opt/airflow/dbt_venv && \
