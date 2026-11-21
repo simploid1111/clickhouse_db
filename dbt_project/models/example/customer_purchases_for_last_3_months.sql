@@ -8,16 +8,16 @@
 with 
 (
 select (
-toStartOfMonth(min(splitByChar('.', if(shippeddate='NULL', '1970-01-01 00:00:00', shippeddate))[1]::date)),
-toStartOfMonth(max(splitByChar('.', if(shippeddate='NULL', '1970-01-01 00:00:00', shippeddate))[1]::date))
-	) 
+toStartOfMonth(minIf(splitByChar('.', coalesce(shippeddate, '1970-01-01 00:00:00.000'))[1]::date, shippeddate is not null)),
+toStartOfMonth(maxIf(splitByChar('.', coalesce(shippeddate, '1970-01-01 00:00:00.000'))[1]::date, shippeddate is not null))
+         ) 
 from {{ source('prod', 'orders') }}
 ) as arr_dt 
 ,orders_cte as 
 (
 select 
 	customerid
-	,toStartOfMonth(splitByChar('.', if(shippeddate='NULL', '1970-01-01 00:00:00', shippeddate))[1]::datetime) shippedmonth
+	,toStartOfMonth(splitByChar('.', coalesce(shippeddate, '1970-01-01 00:00:00.000'))[1]::datetime) shippedmonth
 	,nullif(orderid, 0) orderid
 from  {{ source('prod', 'orders') }}
 group by all 
