@@ -23,7 +23,7 @@ clickhouse_dbt_dag = DbtDag(
     profile_config=profile_config,
     execution_config=ExecutionConfig(
         # Если dbt установлен в системный python внутри Dockerfile:
-        dbt_executable_path="/home/airflow/.local/bin/dbt",
+        dbt_executable_path="/opt/airflow/dbt_venv/bin/dbt",
     ),
     dag_id="clickhouse_dbt_pipeline",
     schedule="@daily",
