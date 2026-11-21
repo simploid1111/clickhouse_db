@@ -54,8 +54,8 @@ from
 	) tal
 )
 select 
-	customerid
-	,shippedmonth
+	coalesce(customerid, '') customerid
+	,coalesce(shippedmonth, toDate('1970-01-01')) shippedmonth 
 	,revenue_3_last_month
 	,order_cnt_over_3_last_month
 from final_cte 
