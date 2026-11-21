@@ -13,7 +13,7 @@ profile_config = ProfileConfig(
         profile_args={
             "schema": "prod",
             "port": 8123,
-            "driver":"http"
+            "driver":"http",
             "secure": False,
         },
     ),
