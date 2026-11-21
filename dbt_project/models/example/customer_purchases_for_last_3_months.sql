@@ -3,7 +3,6 @@
     engine = "MergeTree()", 
     order_by = ["customerid", "shippedmonth"],
     database = "prod",
-    schema = "prod",
     alias = "customer_purchases_for_last_3_months"
 ) }}
 with 
