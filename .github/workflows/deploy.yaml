@@ -26,4 +26,4 @@ jobs:
           AIRFLOW_ADMIN_USER: ${{ secrets.AIRFLOW_ADMIN_USER }}
           AIRFLOW_ADMIN_PASSWORD: ${{ secrets.AIRFLOW_ADMIN_PASSWORD }}
         run:
-          docker compose up -d --remove-orphans
+          docker compose up -d --build --remove-orphans

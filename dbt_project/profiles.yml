@@ -2,7 +2,7 @@ bi_dwh_project:
   outputs:
     dev:
       type: clickhouse
-      schema: default # Ваша целевая база данных в ClickHouse
+      schema: prod # Ваша целевая база данных в ClickHouse
       
       # Подставляем переменные окружения, чтобы не хранить пароли в коде
       host: "{{ env_var('CLICKHOUSE_HOST') }}"
