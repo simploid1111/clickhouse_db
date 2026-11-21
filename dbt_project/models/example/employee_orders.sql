@@ -8,7 +8,7 @@
     on_schema_change = 'append_new_columns'
 ) }}
 select 
-	employeeid
+	coalesce(employeeid, 0) employeeid
 	,lastname
 	,firstname
 	,title
